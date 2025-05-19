@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <meta content="Amar Persaud" name="author"/>
+  <meta content="en" http-equiv="Content-Language" name="lang"/>
+  <link href="/favicon.ico" rel="icon"/>
+  <link href="css/style.min.css" rel="stylesheet" type="text/css">
+   <script src="js/script.min.js">
+   </script>
+  </link>
+ </head>
+ <body>
+  <template id="step_template">
+   <li class="step">
+    <div class="step_left">
+     <span class="step_num">
+      Step number
+     </span>
+     <span class="step_duration">
+      Duration
+     </span>
+     <span class="step_frequency">
+      Frequency
+     </span>
+     <span class="step_temp">
+      Temperature
+     </span>
+     <ul class="step_container">
+     </ul>
+    </div>
+    <div class="step_right">
+     <button>
+      ↑
+     </button>
+     <button>
+      ↓
+     </button>
+    </div>
+    <div class="step_right">
+     <button>
+      ×
+     </button>
+     <button>
+      ≡
+     </button>
+     <button>
+      +
+     </button>
+    </div>
+   </li>
+  </template>
+  <div id="outer_container">
+   <div class="step_panel">
+    <span>
+     Pour In buffer time:
+     <input class="tb" min="0" type="number"/>
+    </span>
+    <span>
+     Pour Out buffer time:
+     <input class="tb" min="0" type="number"/>
+    </span>
+   </div>
+   <div class="step_panel" id="step_editor">
+    <table>
+     <tr>
+      <td>
+       Name:
+      </td>
+      <td>
+       <input class="tb" id="step_name_edit"/>
+      </td>
+      <td>
+      </td>
+     </tr>
+     <tr>
+      <td>
+       Type:
+      </td>
+      <td>
+       <select class="tb" id="step_type_edit">
+        <option value="Chemical">
+         Chemical
+        </option>
+        <option value="Physical">
+         Physical
+        </option>
+       </select>
+      </td>
+     </tr>
+     <tr>
+      <td>
+       Duration:
+      </td>
+      <td>
+       <input class="tb" id="step_duration_edit" type="number"/>
+       Seconds
+      </td>
+      <td>
+       <!--
+								<select id="step_type_edit" class="tb">
+									<option value="seconds">Seconds</option>
+									<option value="inversions">Inversions</option>
+									<option value="times">Times</option>
+								</select>
+                                -->
+      </td>
+     </tr>
+     <tr>
+      <td>
+       Repeat
+       <input id="step_repeat_edit" onchange="step_repeat_enabled_changed(this)" type="checkbox"/>
+      </td>
+      <td>
+       <input class="tb" id="step_frequency_duration_edit" min="1" type="number"/>
+       times
+      </td>
+      <td>
+       <input id="step_repeat_until_end_edit" type="checkbox"/>
+       Until End
+      </td>
+     </tr>
+     <tr>
+      <td>
+       Frequency: Every
+      </td>
+      <td>
+       <input class="tb" id="step_frequency_edit" type="number"/>
+       s
+      </td>
+     </tr>
+     <tr>
+      <td>
+       Temperature:
+      </td>
+      <td>
+       <input class="tb" id="step_temperature_edit" min="0" type="number"/>
+       C
+      </td>
+     </tr>
+    </table>
+    <button id="step_save_edit_button" onclick="step_save_edit_clicked()">
+     Save Step
+    </button>
+    <button onclick="step_add_edit_clicked()">
+     Add New Step
+    </button>
+   </div>
+   <ul class="step_container" id="main_step_list">
+    <li class="step" id="step-0">
+     <div class="step_left">
+      <span>
+       Step 0 - Prewash
+      </span>
+      <span>
+       Duration: 100s
+      </span>
+      <ul class="step_container">
+       <li class="step">
+        <div class="step_left">
+         <span>
+          Agitation
+         </span>
+         <span>
+          Duration: 10s
+         </span>
+         <span>
+          Frequency: Continuous
+         </span>
+        </div>
+        <div class="step_right">
+         <button>
+          ↑
+         </button>
+         <button>
+          ↓
+         </button>
+        </div>
+        <div class="step_right">
+         <button>
+          ×
+         </button>
+         <button>
+          ≡
+         </button>
+        </div>
+       </li>
+      </ul>
+     </div>
+     <div class="step_right">
+      <button>
+       ×
+      </button>
+      <button>
+       ≡
+      </button>
+      <button>
+       +
+      </button>
+      <button>
+       ↑
+      </button>
+      <button>
+       ↓
+      </button>
+     </div>
+    </li>
+   </ul>
+  </div>
+ </body>
+</html>
