@@ -29,8 +29,29 @@
 
         <div id="outer_container">
                 <div class="step_panel">
-                        <span>Pour In buffer time:  <input type="number" min="0" class="tb"/></span>
-                        <span>Pour Out buffer time: <input type="number" min="0" class="tb"/></span>
+						<span></span>
+                        <span></span>
+                        <span></span>
+						<span></span>
+						
+					<table>
+						<tr>
+							<td>Profile Name</td>
+							<td><input id="profileNameTextbox" class="tb"/></td>
+						</tr>						
+						<tr>
+							<td>Pour In buffer time:  </td>
+							<td><input type="number" min="0" class="tb"/></td>
+						</tr>
+						<tr>
+							<td>Pour Out buffer time: </td>
+							<td><input type="number" min="0" class="tb"/></td>
+						</tr>
+					</table>	
+					<span>
+						<td><input type="file" onchange="ImportProfile()" id="profileFile" accept="Profile/*,.json" >Import Profile</input>
+						<td><button onclick="ExportProfile();">Export Profile</button>
+					</span>
                 </div> 
                 <div id="step_editor" class="step_panel">
 					<table>

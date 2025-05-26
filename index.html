@@ -56,12 +56,49 @@
   <div id="outer_container">
    <div class="step_panel">
     <span>
-     Pour In buffer time:
-     <input class="tb" min="0" type="number"/>
     </span>
     <span>
-     Pour Out buffer time:
-     <input class="tb" min="0" type="number"/>
+    </span>
+    <span>
+    </span>
+    <span>
+    </span>
+    <table>
+     <tr>
+      <td>
+       Profile Name
+      </td>
+      <td>
+       <input class="tb" id="profileNameTextbox"/>
+      </td>
+     </tr>
+     <tr>
+      <td>
+       Pour In buffer time:
+      </td>
+      <td>
+       <input class="tb" min="0" type="number"/>
+      </td>
+     </tr>
+     <tr>
+      <td>
+       Pour Out buffer time:
+      </td>
+      <td>
+       <input class="tb" min="0" type="number"/>
+      </td>
+     </tr>
+    </table>
+    <span>
+     <td>
+      <input accept="Profile/*,.json" id="profileFile" onchange="ImportProfile()" type="file"/>
+      Import Profile
+      <td>
+       <button onclick="ExportProfile();">
+        Export Profile
+       </button>
+      </td>
+     </td>
     </span>
    </div>
    <div class="step_panel" id="step_editor">
