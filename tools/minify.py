@@ -2,17 +2,10 @@ from csscompressor import compress
 import os
 from jsmin import jsmin
 
-dirsToCheck = ["./css", "./js"]
+dirsToCheck = ["./css", "./js", "./fonts"]
 
-class cd:
-  """Context manager for changing the current working directory"""
-  def __init__(self, newPath):
-    self.newPath = os.path.expanduser(newPath)
-  def __enter__(self):
-    self.savedPath = os.getcwd()
-    os.chdir(self.newPath)
-  def __exit__(self, etype, value, traceback):
-    os.chdir(self.savedPath)
+#Move up a directory
+os.chdir("../")
 
 def checkDir(direct):
     for root, subdirs, files in os.walk(direct):
