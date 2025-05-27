@@ -75,6 +75,20 @@
 				this.sub_steps[i].remove_element_by_id(step_id);
 			}
 		}
+		
+		get_max_step_id(){
+			if(sub_steps.length == 0){
+				return this.step_id;
+			}
+			
+			let currentmax = 0;
+			for(let i = 0; i < sub_steps.length; i++){
+				if(sub_steps[i].step_id > currentmax){
+					current_max=sub_steps[i].step_id;
+				}
+			}
+			return currentmax;
+		}
 	}
 
 
@@ -83,11 +97,16 @@
 		ProfileName = "Unnamed Profile";
 		PourInTime = 0;
 		PourOutTime = 0;
+		current_step_id = 0;
 		constructor(RootStep, ProfileName, PourInTime, PourOutTime){
 			this.RootStep = RootStep;
 			this.ProfileName = ProfileName;
 			this.PourInTime = PourInTime;
 			this.PourOutTime = PourOutTime;
+		}
+		RecalculateStepID(step){
+			let maxStepID = RootStep.get_max_step_id();
+			this.current_step_id = maxStepID + 1;
 		}
 	}
 	
@@ -119,6 +138,15 @@
 	}
 
 	/*--------- Input events ----------*/
+	
+	function UpdateProfileSettings(){
+		let pn = document.getElementById("profileNameTextbox");
+		let pit = document.getElementById("PourInTimeInput");
+		let pot = document.getElementById("PourOutTimeInput");
+		CurrentProfile.ProfileName = pn.value;
+		CurrentProfile.PourInTime = pit.value;
+		CurrentProfile.PourOutTime = pot.value;
+	}
 	
 	/* Save edited values to currently selected step */
 	function step_save_edit_clicked(){
@@ -270,7 +298,7 @@
 
 
 	
-	/*---------- Step functions ----------*/
+	/*---------- Development Step functions ----------*/
 	
 	/* populate editor for a given step id */
 	function start_edit_step(step_id){
@@ -306,7 +334,6 @@
 	
 
 	/* Adds step to the list */
-
 	function add_step(step_name, step_type, step_duration, step_repeat_enabled, step_repeat_until_end, step_frequency, step_temperature, step_sub_steps){
 		let new_step = new DevelopmentStep(
 			current_step_id,
@@ -382,16 +409,24 @@
 
 	/* refresh the list from underlying data */
 	function refreshUI(){
+		//Clear the step list
 		clear_ui_step_list();
+		//Populate the step list
 		populate_ui_step_list();
+		
+		//Enable or disable save button
 		if(CurrentProfile.RootStep.sub_steps.length == 0){
 			document.getElementById("step_save_edit_button").disabled = true;	//disable save button because there is no step to edit
 		}
 		else{
-			document.getElementById("step_save_edit_button").disabled = false;	//disable save button because there is no step to edit
-		}
+			document.getElementById("step_save_edit_button").disabled = false;	//Enable save button because there are steps to edit
+		}		
 	}
 	
+	
+	/*---------- Development Profile Loading/Exporting functions ----------*/
+	
+	/* Imports a profile selected on the */
 	function ImportProfile(){
 		let inp = document.getElementById("profileFile");
 		if(inp.files.length == 1){
@@ -405,15 +440,25 @@
 				    var content = readerEvent.target.result; // this is the content!
 
 				    let loadedProfile = JSON.parse(content);
-				    CurrentProfile = loadedProfile;
+					
+					//Convert loaded JS object to instance of Development profile class.
+				    CurrentProfile = JsonLoadedProfileToDevelopmentProfile(loadedProfile); 
+					
 					refreshUI();
+					// Update profile settings text boxes
+					let pn = document.getElementById("profileNameTextbox");
+					let pit = document.getElementById("PourInTimeInput");
+					let pot = document.getElementById("PourOutTimeInput");
+					pn.value = CurrentProfile.ProfileName;
+					pit.value = CurrentProfile.PourInTime;
+					pot.value = CurrentProfile.PourOutTime;
+					
 				}
 			}
 			catch(e){
 				console.log("Failed to parse file");
 			}
 		}
-		refreshUI();
 	}
 	
 	function ExportProfile(){
@@ -430,4 +475,25 @@
 	   a.download = filename || 'download.json';
 	   a.click();
 	   a.remove();
+	}
+	
+	function JsonLoadedStepToDevelopmentStep(JsonObj){
+		if(JsonObj != null){
+			let newStep = new DevelopmentStep(JsonObj.step_id, JsonObj.step_type, JsonObj.step_name, JsonObj.step_duration, JsonObj.step_repeat_enabled, JsonObj.step_repeat_until_end, JsonObj.step_frequency, JsonObj.step_temperature, [], JsonObj.depth);
+			newStep.step_parent = JsonObj.step_parent;
+			for(let i = 0; i < JsonObj.sub_steps.length; i++){
+				newStep.sub_steps.push(JsonLoadedStepToDevelopmentStep(JsonObj.sub_steps[i]));
+			}
+			return newStep;
+		}
+		return null;
+	}
+	
+	function JsonLoadedProfileToDevelopmentProfile(JsonObj){
+		if(JsonObj != null){
+			let newRootStep = JsonLoadedStepToDevelopmentStep(JsonObj.RootStep);
+			let newProfile = new DevelopmentProfile(newRootStep, JsonObj.ProfileName, JsonObj.PourInTime, JsonObj.PourOutTime);
+			return newProfile;
+		}
+		return null;
 	}

@@ -69,7 +69,7 @@
        Profile Name
       </td>
       <td>
-       <input class="tb" id="profileNameTextbox"/>
+       <input class="tb" id="profileNameTextbox" onchange="UpdateProfileSettings()"/>
       </td>
      </tr>
      <tr>
@@ -77,7 +77,7 @@
        Pour In buffer time:
       </td>
       <td>
-       <input class="tb" min="0" type="number"/>
+       <input class="tb" id="PourInTimeInput" min="0" onchange="UpdateProfileSettings()" type="number"/>
       </td>
      </tr>
      <tr>
@@ -85,21 +85,28 @@
        Pour Out buffer time:
       </td>
       <td>
-       <input class="tb" min="0" type="number"/>
+       <input class="tb" id="PourOutTimeInput" min="0" onchange="UpdateProfileSettings()" type="number"/>
+      </td>
+     </tr>
+     <tr>
+      <td>
+       Import Profile:
+      </td>
+      <td>
+       <input accept="Profile/*,.json" class="tb" id="profileFile" onchange="ImportProfile()" type="file"/>
+      </td>
+     </tr>
+     <tr>
+      <td>
+       Export Profile:
+      </td>
+      <td>
+       <button onclick="ExportProfile();">
+        Export
+       </button>
       </td>
      </tr>
     </table>
-    <span>
-     <td>
-      <input accept="Profile/*,.json" id="profileFile" onchange="ImportProfile()" type="file"/>
-      Import Profile
-      <td>
-       <button onclick="ExportProfile();">
-        Export Profile
-       </button>
-      </td>
-     </td>
-    </span>
    </div>
    <div class="step_panel" id="step_editor">
     <table>

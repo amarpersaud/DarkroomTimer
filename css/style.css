@@ -51,7 +51,7 @@ body,html,head{
 }
 
 .step_panel .tb{
-	width: 150px;
+	/*width: 150px;*/
 }
 
 button, .tb, select{
@@ -88,10 +88,12 @@ button, .tb, select{
 	box-sizing: border-box;
 }
 
+/*
 .step:not(:has(.step:hover)):hover {
-	box-shadow: 5px 5px 20px rgba(30,30,50,0.4), inset -5px -5px 20px rgba(30,30,50,0.05);
-	border: 3px solid rgba(0,0,100,0.5);
+	box-shadow: 5px 5px 20px rgba(30,30,40,0.4), inset -5px -5px 20px rgba(30,30,40,0.05);
+	border: 3px solid rgba(0,0,40,0.5);
 }
+*/
 
 .step_container .step_container li{
 	background-color: rgb(100, 70, 70);

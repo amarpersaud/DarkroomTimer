@@ -37,21 +37,25 @@
 					<table>
 						<tr>
 							<td>Profile Name</td>
-							<td><input id="profileNameTextbox" class="tb"/></td>
+							<td><input id="profileNameTextbox" class="tb" onchange="UpdateProfileSettings()"/></td>
 						</tr>						
 						<tr>
 							<td>Pour In buffer time:  </td>
-							<td><input type="number" min="0" class="tb"/></td>
+							<td><input id="PourInTimeInput" type="number" min="0" class="tb" onchange="UpdateProfileSettings()"/></td>
 						</tr>
 						<tr>
 							<td>Pour Out buffer time: </td>
-							<td><input type="number" min="0" class="tb"/></td>
+							<td><input id="PourOutTimeInput" type="number" min="0" class="tb" onchange="UpdateProfileSettings()"/></td>
+						</tr>	
+						<tr>
+							<td>Import Profile: </td>
+							<td><input type="file" onchange="ImportProfile()" id="profileFile" accept="Profile/*,.json" class="tb"/></td>
+						</tr>						
+						<tr>
+							<td>Export Profile: </td>
+							<td><button onclick="ExportProfile();">Export</button></td>
 						</tr>
-					</table>	
-					<span>
-						<td><input type="file" onchange="ImportProfile()" id="profileFile" accept="Profile/*,.json" >Import Profile</input>
-						<td><button onclick="ExportProfile();">Export Profile</button>
-					</span>
+					</table>
                 </div> 
                 <div id="step_editor" class="step_panel">
 					<table>
