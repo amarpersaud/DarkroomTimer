@@ -100,13 +100,12 @@ class MyHandler(FileSystemEventHandler):
         files = []
 
         #Loop over queued filemodifiedevents and get the paths. Remove them from the queue.
-        initialLength = len(self.EventsList)
+        initialLength = len(self.EventsList) # use the current length to avoid getting stuck in loop if queue keeps expanding.
         for i in range(initialLength):
             #start from end and work back towards front to modify list in place
-            event = self.EventsList[initialLength - i - 1]
+            event = self.EventsList.pop(0)
             if not event.src_path in files:
                 files.append(event.src_path.replace("\\", "/"))
-            self.EventsList.remove(event) #remove handled event from the list.
         handledFiles = 0
         
         #Handle the files.
