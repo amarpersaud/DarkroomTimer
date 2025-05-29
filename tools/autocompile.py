@@ -5,6 +5,7 @@
 
 import os
 import time 
+from datetime import datetime
 
 # File watchdog
 from watchdog.observers import Observer
@@ -20,33 +21,14 @@ import os
 import re
 
 HTML_SRC_LOCATION = "./SRC"
+HTML_INC_LOCATION = "./INC"
 
 MinifyDirectories = ["./css", "./js", "./fonts"]
 
 class MyHandler(FileSystemEventHandler):
+    EventsList = []
     def on_modified(self, event):
-        #print(f'event type: {event.event_type}  path : {event.src_path}')
-        if(event.src_path.endswith(".py")):
-            print("python file, ignoring")
-        if( (event.src_path.endswith(".css") and not event.src_path.endswith(".min.css")) or (event.src_path.endswith(".js") and not event.src_path.endswith(".min.js"))):
-            print(f"css or js file changed, recompile: {event.src_path}")
-            for d in MinifyDirectories:
-                self.CheckDirectory(d)
-        if(event.src_path.endswith(".html")):
-            s = event.src_path.replace("\\", "/")
-            if(s.count("/") > 1):   #Only if change is in a subdirectory
-                for root, subdirs, files in os.walk(HTML_SRC_LOCATION):
-                    if '.git' in subdirs:
-                        subdirs.remove('.git')
-                    for filename in files:
-                        if(filename.endswith(".html")):
-                            print("Found html file: {} {}".format(root, filename))
-                            parsedHTML = self.ParseHTML(root, filename)
-                            newFilepath = os.path.join("./", root[len(HTML_SRC_LOCATION)+1:], filename)
-                            print("New filepath: {}".format(newFilepath))
-                            with open(newFilepath, 'wb') as nf:
-                                nf.write(parsedHTML)
-                            
+        self.EventsList.append(event)
     def CheckDirectory(self, direct):
         for root, subdirs, files in os.walk(direct):
             if '.git' in subdirs:
@@ -112,7 +94,53 @@ class MyHandler(FileSystemEventHandler):
             inc.replace_with(BeautifulSoup(replacementText, "html.parser"))
         
         return soup.prettify().encode('utf-8')
+    
+    def HandleEvents(self): # batch events
+        # Deduplicate events
+        files = []
+
+        #Loop over queued filemodifiedevents and get the paths. Remove them from the queue.
+        initialLength = len(self.EventsList)
+        for i in range(initialLength):
+            #start from end and work back towards front to modify list in place
+            event = self.EventsList[initialLength - i - 1]
+            if not event.src_path in files:
+                files.append(event.src_path.replace("\\", "/"))
+            self.EventsList.remove(event) #remove handled event from the list.
+        handledFiles = 0
         
+        #Handle the files.
+        for f in files:
+            if(os.path.isfile(f)):  #Make sure the modified event is for the file and not the parent directory.
+                print(f"File is {f}")   
+                #ignore python files. Case not necessary but nice to know
+                if(f.endswith(".py")):
+                    print("python file, ignoring")
+                #Minify css and js files
+                if( (f.endswith(".css") and not f.endswith(".min.css")) or (f.endswith(".js") and not f.endswith(".min.js"))):
+                    print(f"css or js file changed, recompile: {f}")
+                    for d in MinifyDirectories:
+                        self.CheckDirectory(d)
+                #Compile html files if they are part of the inc or 
+                if(f.endswith(".html")):
+                    #Only recompile if source or included html has changed.
+                    if(f.startswith(HTML_SRC_LOCATION) or f.startswith(HTML_INC_LOCATION)):
+                        for root, subdirs, files in os.walk(HTML_SRC_LOCATION):
+                            if '.git' in subdirs:
+                                subdirs.remove('.git')
+                            for filename in files:
+                                if(filename.endswith(".html")):
+                                    print("Found html file: {} {}".format(root, filename))
+                                    parsedHTML = self.ParseHTML(root, filename)
+                                    newFilepath = os.path.join("./", root[len(HTML_SRC_LOCATION)+1:], filename)
+                                    print("New filepath: {}".format(newFilepath))
+                                    with open(newFilepath, 'wb') as nf:
+                                        nf.write(parsedHTML)
+                    else:
+                        print("Not SRC or INC file. Ignoring")
+                handledFiles = handledFiles + 1
+        print(f"Handled {handledFiles} events at t={datetime.now()}")
+
 if __name__ == "__main__":
     event_handler = MyHandler()
     observer = Observer()
@@ -124,7 +152,9 @@ if __name__ == "__main__":
 
     try:
         while True:
-            time.sleep(1)
+            time.sleep(3)
+            #process queued files every 3 seconds to avoid repeated filemodiified evnts
+            event_handler.HandleEvents()
     except KeyboardInterrupt:
         observer.stop()
     observer.join()
