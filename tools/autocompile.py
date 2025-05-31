@@ -104,13 +104,14 @@ class MyHandler(FileSystemEventHandler):
         for i in range(initialLength):
             #start from end and work back towards front to modify list in place
             event = self.EventsList.pop(0)
-            if not event.src_path in files:
+            if not (event.src_path.replace("\\", "/") in files):
                 files.append(event.src_path.replace("\\", "/"))
         handledFiles = 0
         
         #Handle the files.
-        for f in files:
-            if(os.path.isfile(f)):  #Make sure the modified event is for the file and not the parent directory.
+        for f in files: 
+            #Make sure the modified event is for the file and not the parent directory.
+            if(os.path.isfile(f) and (".git" not in f)): # Also ensure not a git file
                 print(f"File is {f}")   
                 #ignore python files. Case not necessary but nice to know
                 if(f.endswith(".py")):
