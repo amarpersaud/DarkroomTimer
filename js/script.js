@@ -68,17 +68,17 @@
 		}
 		
 		get_max_step_id(){
-			if(sub_steps.length == 0){
+			if(this.sub_steps.length == 0){
 				return this.step_id;
 			}
 			
-			let currentmax = 0;
-			for(let i = 0; i < sub_steps.length; i++){
-				if(sub_steps[i].step_id > currentmax){
-					current_max=sub_steps[i].step_id;
+			let current_max = 0;
+			for(let i = 0; i < this.sub_steps.length; i++){
+				if(this.sub_steps[i].step_id > current_max){
+					current_max = this.sub_steps[i].step_id;
 				}
 			}
-			return currentmax;
+			return current_max;
 		}
 	}
 
@@ -99,7 +99,7 @@
 			this.PourOutTime = PourOutTime;
 		}
 		RecalculateStepID(){
-			let maxStepID = RootStep.get_max_step_id();
+			let maxStepID = this.RootStep.get_max_step_id();
 			this.current_step_id = maxStepID + 1;
 		}
 	}
