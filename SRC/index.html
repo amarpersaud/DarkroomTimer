@@ -4,7 +4,7 @@
 		<include href="INC/header.html" />
 	</head>
     <body>
-        <template id="step_template">
+        <template id="step_editing_template">
             <li class="step">
                 <div class="step_left">
                     <span class="step_num">Step number</span>
@@ -14,44 +14,65 @@
                     <ul class="step_container">
                     </ul>
                 </div>
-					<div class="step_right">
-						<button>&uarr;</button>
-						<button>&darr;</button>
-					</div>
-					<div class="step_right">
-						<button>&times;</button>
-						<button>&equiv;</button>
-						<button>+</button>
-					</div>
+				<div class="step_right">
+					<button>&uarr;</button>
+					<button>&darr;</button>
+				</div>
+				<div class="step_right">
+					<button>&times;</button>
+					<button>&equiv;</button>
+					<button>+</button>
+				</div>
             </li>
         </template>
-
+		<template id="step_template">
+            <li class="step">
+                <div class="step_left">
+                    <span class="step_num">Step number</span>
+                    <span class="step_duration">Duration</span>
+                    <span class="step_frequency">Frequency</span>
+                    <span class="step_temp">Temperature</span>
+                    <ul class="step_container">
+                    </ul>
+                </div>
+				<div class="step_right">
+					<button>&equiv;</button>
+				</div>
+            </li>
+        </template>
         <div id="outer_container">
-                <div class="step_panel">	
-					<table>
-						<tr>
-							<td>Profile Name</td>
-							<td><input id="profileNameTextbox" class="tb" onchange="UpdateProfileSettings()"/></td>
-						</tr>						
-						<tr>
-							<td>Pour In buffer time:  </td>
-							<td><input id="PourInTimeInput" type="number" min="0" class="tb" onchange="UpdateProfileSettings()"/></td>
-						</tr>
-						<tr>
-							<td>Pour Out buffer time: </td>
-							<td><input id="PourOutTimeInput" type="number" min="0" class="tb" onchange="UpdateProfileSettings()"/></td>
-						</tr>	
-						<tr>
-							<td>Import Profile: </td>
-							<td><input type="file" onchange="ImportProfile()" id="profileFile" accept="Profile/*,.json" class="tb"/></td>
-						</tr>						
-						<tr>
-							<td>Export Profile: </td>
-							<td><button onclick="ExportProfile();">Export</button></td>
-						</tr>
-					</table>
-                </div> 
-                <div id="step_editor" class="step_panel">
+			<details class="step_panel" open>
+				<summary class="panel_header">Profile Settings</summary>
+				<table id="profile_settings_content" class="collapsible">
+					<tr>
+						<td>Profile Name</td>
+						<td><input id="profileNameTextbox" class="tb" onchange="UpdateProfileSettings()"/></td>
+					</tr>
+					<tr>
+						<td>Pour In buffer time:  </td>
+						<td><input id="PourInTimeInput" type="number" min="0" class="tb" onchange="UpdateProfileSettings()"/></td>
+					</tr>
+					<tr>
+						<td>Pour Out buffer time: </td>
+						<td><input id="PourOutTimeInput" type="number" min="0" class="tb" onchange="UpdateProfileSettings()"/></td>
+					</tr>
+					<tr>
+						<td>Import Profile: </td>
+						<td><input type="file" onchange="ImportProfile()" id="profileFile" accept="Profile/*,.json" class="tb"/></td>
+					</tr>
+					<tr>
+						<td>Export Profile: </td>
+						<td><button onclick="ExportProfile();">Export</button></td>
+					</tr>
+					<tr>
+						<td>Editing</td> 
+						<td><input type="checkbox" onclick="editing_clicked()" id="EnableEditingCheckbox"/></td>
+					</tr>
+				</table>
+			</details> 
+			<details id="step_editor" class="step_panel" open>
+				<summary class="panel_header">Step Settings</summary>
+				<div id="step_settings_content">
 					<table>
 						<tr>
 							<td>Name: </td>
@@ -71,13 +92,13 @@
 							<td>Duration: </td>
 							<td><input id="step_duration_edit" type="number" class="tb"/> Seconds</td> 
 							<td>
-                                <!--
+								<!--
 								<select id="step_type_edit" class="tb">
 									<option value="seconds">Seconds</option>
 									<option value="inversions">Inversions</option>
 									<option value="times">Times</option>
 								</select>
-                                -->
+								-->
 							</td>
 						</tr>
 						<tr>
@@ -94,47 +115,47 @@
 							<td><input type="number" min="0" class="tb" id="step_temperature_edit"/> C</td>
 						</tr>
 					</table>	
-                    <button id="step_save_edit_button" onclick="step_save_edit_clicked()">Save Step</button><button onclick="step_add_edit_clicked()">Add New Step</button>
-                </div>
+					<button id="step_save_edit_button" onclick="step_save_edit_clicked()">Save Step</button><button onclick="step_add_edit_clicked()">Add New Step</button>
+				</div>
+			</details>
 
+			<ul id="main_step_list" class="step_container">
 
-                <ul id="main_step_list" class="step_container">
+				<li class="step" id="step-0">
+					<div class="step_left">
+						<span>Step 0 - Prewash</span>
+						<span>Duration: 100s</span>
+						
+						<ul class="step_container">
+							<li class="step">
+								<div class="step_left">
+									<span>Agitation</span>
+									<span>Duration: 10s</span>
+									<span>Frequency: Continuous</span>
+								</div>             
+								<div class="step_right">
+									<button>&uarr;</button>
+									<button>&darr;</button>
+								</div>
+								<div class="step_right">
+									<button>&times;</button>
+									<button>&equiv;</button>
+								</div>
+							</li>
+							
+						</ul>
 
-                    <li class="step" id="step-0">
-                        <div class="step_left">
-                            <span>Step 0 - Prewash</span>
-                            <span>Duration: 100s</span>
-                            
-                            <ul class="step_container">
-                                <li class="step">
-                                    <div class="step_left">
-                                        <span>Agitation</span>
-                                        <span>Duration: 10s</span>
-                                        <span>Frequency: Continuous</span>
-                                    </div>             
-                                    <div class="step_right">
-                                        <button>&uarr;</button>
-                                        <button>&darr;</button>
-                                    </div>
-                                    <div class="step_right">
-                                        <button>&times;</button>
-                                        <button>&equiv;</button>
-                                    </div>
-                                </li>
-                                
-                            </ul>
-
-                        </div>
-                        <div class="step_right">
-                            <button>&times;</button>
-                            <button>&equiv;</button>
-                            <button>+</button>
-							<button>&uarr;</button>
-							<button>&darr;</button>
-                        </div>
-                    </li>
-                    
-                </ul>
+					</div>
+					<div class="step_right">
+						<button>&times;</button>
+						<button>&equiv;</button>
+						<button>+</button>
+						<button>&uarr;</button>
+						<button>&darr;</button>
+					</div>
+				</li>
+				
+			</ul>
 
         </div>
     </body>

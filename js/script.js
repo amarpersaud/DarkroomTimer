@@ -9,15 +9,6 @@
 		INVERSIONS: "inversions"
 	});
 	Object.freeze(StepDurationType);
-
-	//current counter for step ids. incremented to avoid conflicting ID assignment.
-	var current_step_id = 0;
-
-	//Which step is currently being edited
-	var current_editing_step_id = -1;
-
-	//If true, editing is enabled and editor buttons are made visible
-	var editing_enabled = true;
 	
 	var depth_limit = 3;
 	
@@ -98,6 +89,9 @@
 		PourInTime = 0;
 		PourOutTime = 0;
 		current_step_id = 0;
+		editing_enabled = true;
+		current_editing_step_id = -1;
+		
 		constructor(RootStep, ProfileName, PourInTime, PourOutTime){
 			this.RootStep = RootStep;
 			this.ProfileName = ProfileName;
@@ -150,7 +144,7 @@
 	
 	/* Save edited values to currently selected step */
 	function step_save_edit_clicked(){
-		let itm = CurrentProfile.RootStep.find_element_by_id(current_editing_step_id);
+		let itm = CurrentProfile.RootStep.find_element_by_id(CurrentProfile.current_editing_step_id);
 					   
 		let new_step_name = document.getElementById("step_name_edit").value;
 		let new_step_duration = document.getElementById("step_duration_edit").value;
@@ -191,7 +185,7 @@
 		let new_repeat_until_end = document.getElementById("step_repeat_until_end_edit").checked;
 		let new_step_temp= document.getElementById("step_temperature_edit").value;
 
-		current_editing_step_id = current_step_id;
+		CurrentProfile.current_editing_step_id = CurrentProfile.current_step_id;
 		add_step(new_step_name, new_step_type, new_step_duration, new_repeat_enabled, new_repeat_until_end, new_step_frequency, new_step_temp, []);
 	}
 
@@ -224,6 +218,7 @@
 		}
 		refreshUI();
 	}
+	
 	function move_down_clicked(step_id){
 		//Find item
 		let itm = CurrentProfile.RootStep.find_element_by_id(step_id);
@@ -277,7 +272,7 @@
 		/* todo: populate from boxes for continuous and freq type */
 			/* todo: populate from boxes for continuous and freq type */
 			let new_step = new DevelopmentStep(
-				current_step_id,
+				CurrentProfile.current_step_id,
 				new_step_type,
 				new_step_name,
 				new_step_duration,
@@ -289,14 +284,17 @@
 				itm.depth + 1
 			);
 			new_step.step_parent = itm.step_id;
-			current_editing_step_id = current_step_id;
-			current_step_id = current_step_id + 1;
+			CurrentProfile.current_editing_step_id = CurrentProfile.current_step_id;
+			CurrentProfile.current_step_id = CurrentProfile.current_step_id + 1;
 			itm.sub_steps.push(new_step);
 		}
 		refreshUI();     
 	}
-
-
+	
+	function editing_clicked(){
+		CurrentProfile.editing_enabled = document.getElementById("EnableEditingCheckbox").checked;
+		refreshUI();
+	}
 	
 	/*---------- Development Step functions ----------*/
 	
@@ -305,7 +303,7 @@
 		let itm = CurrentProfile.RootStep.find_element_by_id(step_id);
 		console.log("editing step id: " + step_id.toString());				
 		
-		current_editing_step_id = step_id;
+		CurrentProfile.current_editing_step_id = step_id;
 		
 		//populate the inputs from the step
 
@@ -336,7 +334,7 @@
 	/* Adds step to the list */
 	function add_step(step_name, step_type, step_duration, step_repeat_enabled, step_repeat_until_end, step_frequency, step_temperature, step_sub_steps){
 		let new_step = new DevelopmentStep(
-			current_step_id,
+			CurrentProfile.current_step_id,
 			step_type,
 			step_name,
 			step_duration,
@@ -350,7 +348,7 @@
 		
 		new_step.step_parent = CurrentProfile.RootStep.step_id;
 
-		current_step_id = current_step_id + 1;
+		CurrentProfile.current_step_id = CurrentProfile.current_step_id + 1;
 		CurrentProfile.RootStep.sub_steps.push(new_step);
 		refreshUI();
 	}
@@ -378,32 +376,58 @@
 	//Build a step HTML from tree given parent item, recursively.
 	function build_step_HTML_recursive(itm, step_num){
 			//Clone the template
-			let temp = document.getElementById("step_template");
-			let clon = temp.content.firstElementChild.cloneNode(true);
-			
-			//If this is the currently edited step
-			if(itm.step_id == current_editing_step_id && editing_enabled){
-				clon.setAttribute("class", "step edited_step")
+			if(CurrentProfile.editing_enabled){
+				let temp = document.getElementById("step_editing_template");
+				let clon = temp.content.firstElementChild.cloneNode(true);
+				
+				//If this is the currently edited step
+				if((itm.step_id == CurrentProfile.current_editing_step_id) && CurrentProfile.editing_enabled){
+					clon.setAttribute("class", "step edited_step")
+				}
+
+				//Insert properties
+				clon.querySelector(".step_num").innerHTML = "[Step " + step_num.toString() + "] " + itm.step_name;
+				clon.querySelector(".step_duration").innerHTML = "Duration - " + itm.step_duration.toString();
+				clon.querySelector(".step_temp").innerHTML = "Temperature - " + itm.step_temperature.toString();
+				let buttons = clon.querySelectorAll("button");
+
+				buttons[0].setAttribute("onclick", "move_up_clicked(" + itm.step_id+")");
+				buttons[1].setAttribute("onclick", "move_down_clicked(" + itm.step_id+")");
+				buttons[2].setAttribute("onclick", "delete_step(" + itm.step_id+")");
+				buttons[3].setAttribute("onclick", "step_edit_clicked(" + itm.step_id+")");
+				buttons[4].setAttribute("onclick", "step_add_to_clicked(" + itm.step_id+")");
+				
+				//Create and insert children into this node
+				for(let i = 0; i < itm.sub_steps.length; i++){
+					let child = build_step_HTML_recursive(itm.sub_steps[i], i);
+					clon.querySelector(".step_container").appendChild(child);
+				}  
+				return clon;
 			}
+			else{
+				let temp = document.getElementById("step_template");
+				let clon = temp.content.firstElementChild.cloneNode(true);
+				
+				//If this is the currently edited step
+				if((itm.step_id == CurrentProfile.current_editing_step_id) && CurrentProfile.editing_enabled){
+					clon.setAttribute("class", "step edited_step")
+				}
 
-			//Insert properties
-			clon.querySelector(".step_num").innerHTML = "[Step " + step_num.toString() + "] " + itm.step_name;
-			clon.querySelector(".step_duration").innerHTML = "Duration - " + itm.step_duration.toString();
-			clon.querySelector(".step_temp").innerHTML = "Temperature - " + itm.step_temperature.toString();
-			let buttons = clon.querySelectorAll("button");
+				//Insert properties
+				clon.querySelector(".step_num").innerHTML = "[Step " + step_num.toString() + "] " + itm.step_name;
+				clon.querySelector(".step_duration").innerHTML = "Duration - " + itm.step_duration.toString();
+				clon.querySelector(".step_temp").innerHTML = "Temperature - " + itm.step_temperature.toString();
+				let buttons = clon.querySelectorAll("button");
 
-			buttons[0].setAttribute("onclick", "move_up_clicked(" + itm.step_id+")");
-			buttons[1].setAttribute("onclick", "move_down_clicked(" + itm.step_id+")");
-			buttons[2].setAttribute("onclick", "delete_step(" + itm.step_id+")");
-			buttons[3].setAttribute("onclick", "step_edit_clicked(" + itm.step_id+")");
-			buttons[4].setAttribute("onclick", "step_add_to_clicked(" + itm.step_id+")");
-			
-			//Create and insert children into this node
-			for(let i = 0; i < itm.sub_steps.length; i++){
-				let child = build_step_HTML_recursive(itm.sub_steps[i], i);
-				clon.querySelector(".step_container").appendChild(child);
-			}  
-			return clon;
+				buttons[0].setAttribute("onclick", "step_edit_clicked(" + itm.step_id+")");
+				
+				//Create and insert children into this node
+				for(let i = 0; i < itm.sub_steps.length; i++){
+					let child = build_step_HTML_recursive(itm.sub_steps[i], i);
+					clon.querySelector(".step_container").appendChild(child);
+				}  
+				return clon;
+			}
 	}
 	
 
