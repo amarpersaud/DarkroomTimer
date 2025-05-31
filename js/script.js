@@ -98,7 +98,7 @@
 			this.PourInTime = PourInTime;
 			this.PourOutTime = PourOutTime;
 		}
-		RecalculateStepID(step){
+		RecalculateStepID(){
 			let maxStepID = RootStep.get_max_step_id();
 			this.current_step_id = maxStepID + 1;
 		}
@@ -187,6 +187,7 @@
 
 		CurrentProfile.current_editing_step_id = CurrentProfile.current_step_id;
 		add_step(new_step_name, new_step_type, new_step_duration, new_repeat_enabled, new_repeat_until_end, new_step_frequency, new_step_temp, []);
+		CurrentProfile.RecalculateStepID();
 	}
 
 	function step_repeat_enabled_changed(sender){
@@ -285,7 +286,7 @@
 			);
 			new_step.step_parent = itm.step_id;
 			CurrentProfile.current_editing_step_id = CurrentProfile.current_step_id;
-			CurrentProfile.current_step_id = CurrentProfile.current_step_id + 1;
+			CurrentProfile.RecalculateStepID();
 			itm.sub_steps.push(new_step);
 		}
 		refreshUI();     
@@ -326,7 +327,7 @@
 	/* delete a step by id */
 	function delete_step(step_id){
 		CurrentProfile.RootStep.remove_element_by_id(step_id);
-		console.log("deleting step " + step_id.toString());
+		CurrentProfile.RecalculateStepID();
 		refreshUI();
 	}
 	
@@ -347,9 +348,8 @@
 		);
 		
 		new_step.step_parent = CurrentProfile.RootStep.step_id;
-
-		CurrentProfile.current_step_id = CurrentProfile.current_step_id + 1;
 		CurrentProfile.RootStep.sub_steps.push(new_step);
+		CurrentProfile.RecalculateStepID();
 		refreshUI();
 	}
 	
@@ -467,6 +467,7 @@
 					
 					//Convert loaded JS object to instance of Development profile class.
 				    CurrentProfile = JsonLoadedProfileToDevelopmentProfile(loadedProfile); 
+					CurrentProfile.RecalculateStepID();	//Recalculate to make sure its good
 					
 					refreshUI();
 					// Update profile settings text boxes
