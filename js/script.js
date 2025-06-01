@@ -71,14 +71,11 @@
 		}
 		
 		get_max_step_id(){
-			if(this.sub_steps.length == 0){
-				return this.step_id;
-			}
-			
-			let current_max = 0;
+			let current_max = this.step_id;
 			for(let i = 0; i < this.sub_steps.length; i++){
-				if(this.sub_steps[i].step_id > current_max){
-					current_max = this.sub_steps[i].step_id;
+				let sub_step_max = this.sub_steps[i].get_max_step_id()
+				if(sub_step_max > current_max){
+					current_max = sub_step_max;
 				}
 			}
 			return current_max;
@@ -289,8 +286,8 @@
 			);
 			new_step.step_parent = itm.step_id;
 			CurrentProfile.current_editing_step_id = CurrentProfile.current_step_id;
-			CurrentProfile.RecalculateStepID();
 			itm.sub_steps.push(new_step);
+			CurrentProfile.RecalculateStepID();
 		}
 		refreshUI();     
 	}
@@ -483,7 +480,6 @@
 					pn.value = CurrentProfile.ProfileName;
 					pit.value = CurrentProfile.PourInTime;
 					pot.value = CurrentProfile.PourOutTime;
-					
 				}
 			}
 			catch(e){
@@ -512,6 +508,8 @@
 		if(JsonObj != null){
 			let newStep = new DevelopmentStep(JsonObj.step_id, JsonObj.step_type, JsonObj.step_name, JsonObj.step_duration, JsonObj.step_repeat_enabled, JsonObj.step_repeat_until_end, JsonObj.step_frequency, JsonObj.step_temperature, [], JsonObj.depth);
 			newStep.step_parent = JsonObj.step_parent;
+
+
 			for(let i = 0; i < JsonObj.sub_steps.length; i++){
 				newStep.sub_steps.push(JsonLoadedStepToDevelopmentStep(JsonObj.sub_steps[i]));
 			}
