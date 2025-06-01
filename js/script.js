@@ -527,6 +527,8 @@
 		if(JsonObj != null){
 			let newRootStep = JsonLoadedStepToDevelopmentStep(JsonObj.RootStep);
 			let newProfile = new DevelopmentProfile(newRootStep, JsonObj.ProfileName, JsonObj.PourInTime, JsonObj.PourOutTime);
+			newProfile.current_editing_step_id = JsonObj.current_editing_step_id;
+			console.log("New edit step id is " + newProfile.current_editing_step_id);
 			return newProfile;
 		}
 		return null;
