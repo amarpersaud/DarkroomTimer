@@ -19,11 +19,14 @@
 		step_name = "DefaultStepName"; 
 		step_duration = 60;  //duration in seconds of entire step. Will clip/end even if substeps take longer.
 		
-		step_repeat_enabled = false;
-		step_repeat_until_end = false;  //only matters if repeating
+		step_repeat_enabled = false;	//If step is repeated or not
+		step_repeat_until_end = false;  //If repeating until end of step
+		step_repeat_count = 0;			//Number of times to repeat
 		step_frequency = 30;            //How frequently to repeat in seconds
 
 		step_temperature = 20;  //20C
+
+
 
 		sub_steps = [];
 		
@@ -375,59 +378,62 @@
 	
 	//Build a step HTML from tree given parent item, recursively.
 	function build_step_HTML_recursive(itm, step_num){
-			//Clone the template
+			let temp = null;
 			if(CurrentProfile.editing_enabled){
-				let temp = document.getElementById("step_editing_template");
-				let clon = temp.content.firstElementChild.cloneNode(true);
+				temp = document.getElementById("step_editing_template");
+			}
+			else{
+				temp = document.getElementById("step_template");
+			}
+
+			let clon = temp.content.firstElementChild.cloneNode(true);
 				
-				//If this is the currently edited step
-				if((itm.step_id == CurrentProfile.current_editing_step_id) && CurrentProfile.editing_enabled){
-					clon.setAttribute("class", "step edited_step")
+			//If this is the currently edited step
+			if((itm.step_id == CurrentProfile.current_editing_step_id) && CurrentProfile.editing_enabled){
+				clon.setAttribute("class", "step edited_step")
+			}
+
+			//Insert properties
+			clon.querySelector(".step_num").innerHTML = step_num.toString() + " - " + itm.step_name;
+			clon.querySelector(".step_duration").innerHTML = itm.step_duration.toString();
+			clon.querySelector(".step_type").innerHTML = itm.step_type;
+			clon.querySelector(".step_temp").innerHTML = itm.step_temperature.toString() + "C";
+			
+			if(itm.step_frequency === ""){
+				clon.querySelector(".step_frequency").innerHTML = "N/A";
+			}
+			else{
+				clon.querySelector(".step_frequency").innerHTML = itm.step_frequency.toString();
+			}
+			clon.querySelector(".step_temp").innerHTML = itm.step_temperature.toString() + "C";
+			
+			if(itm.step_repeat_enabled){
+				if(itm.step_repeat_until_end){
+					clon.querySelector(".step_repeat_enabled").innerHTML = "Until End";
+				} else{
+					clon.querySelector(".step_repeat_enabled").innerHTML = itm.step_repeat_count;
 				}
+			}
+			else{
+				clon.querySelector(".step_repeat_enabled").innerHTML = "No";
+			}
 
-				//Insert properties
-				clon.querySelector(".step_num").innerHTML = "[Step " + step_num.toString() + "] " + itm.step_name;
-				clon.querySelector(".step_duration").innerHTML = "Duration - " + itm.step_duration.toString();
-				clon.querySelector(".step_temp").innerHTML = "Temperature - " + itm.step_temperature.toString();
-				let buttons = clon.querySelectorAll("button");
+			let buttons = clon.querySelectorAll("button");
 
+			if(CurrentProfile.editing_enabled){
 				buttons[0].setAttribute("onclick", "move_up_clicked(" + itm.step_id+")");
 				buttons[1].setAttribute("onclick", "move_down_clicked(" + itm.step_id+")");
 				buttons[2].setAttribute("onclick", "delete_step(" + itm.step_id+")");
 				buttons[3].setAttribute("onclick", "step_edit_clicked(" + itm.step_id+")");
 				buttons[4].setAttribute("onclick", "step_add_to_clicked(" + itm.step_id+")");
-				
-				//Create and insert children into this node
-				for(let i = 0; i < itm.sub_steps.length; i++){
-					let child = build_step_HTML_recursive(itm.sub_steps[i], i);
-					clon.querySelector(".step_container").appendChild(child);
-				}  
-				return clon;
 			}
-			else{
-				let temp = document.getElementById("step_template");
-				let clon = temp.content.firstElementChild.cloneNode(true);
-				
-				//If this is the currently edited step
-				if((itm.step_id == CurrentProfile.current_editing_step_id) && CurrentProfile.editing_enabled){
-					clon.setAttribute("class", "step edited_step")
-				}
-
-				//Insert properties
-				clon.querySelector(".step_num").innerHTML = "[Step " + step_num.toString() + "] " + itm.step_name;
-				clon.querySelector(".step_duration").innerHTML = "Duration - " + itm.step_duration.toString();
-				clon.querySelector(".step_temp").innerHTML = "Temperature - " + itm.step_temperature.toString();
-				let buttons = clon.querySelectorAll("button");
-
-				buttons[0].setAttribute("onclick", "step_edit_clicked(" + itm.step_id+")");
-				
-				//Create and insert children into this node
-				for(let i = 0; i < itm.sub_steps.length; i++){
-					let child = build_step_HTML_recursive(itm.sub_steps[i], i);
-					clon.querySelector(".step_container").appendChild(child);
-				}  
-				return clon;
-			}
+			
+			//Create and insert children into this node
+			for(let i = 0; i < itm.sub_steps.length; i++){
+				let child = build_step_HTML_recursive(itm.sub_steps[i], i);
+				clon.querySelector("ul").appendChild(child);
+			}  
+			return clon;
 	}
 	
 

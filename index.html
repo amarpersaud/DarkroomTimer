@@ -3,7 +3,7 @@
  <head>
   <meta charset="utf-8"/>
   <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
-  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <meta content="Amar Persaud" name="author"/>
   <meta content="en" http-equiv="Content-Language" name="lang"/>
   <link href="/favicon.ico" rel="icon"/>
@@ -16,66 +16,123 @@
  <body>
   <template id="step_editing_template">
    <li class="step">
-    <div class="step_left">
-     <span class="step_num">
-      Step number
-     </span>
-     <span class="step_duration">
-      Duration
-     </span>
-     <span class="step_frequency">
-      Frequency
-     </span>
-     <span class="step_temp">
-      Temperature
-     </span>
-     <ul class="step_container">
-     </ul>
+    <div>
+     <div class="step_left">
+      <span class="step_num">
+      </span>
+      <table>
+       <tbody>
+        <tr>
+         <td>
+          Duration:
+         </td>
+         <td class="step_duration">
+         </td>
+         <td>
+          Type:
+         </td>
+         <td class="step_type">
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Repeat:
+         </td>
+         <td class="step_repeat_enabled">
+         </td>
+         <td>
+          Frequency:
+         </td>
+         <td class="step_frequency">
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Temperature:
+         </td>
+         <td class="step_temp">
+         </td>
+         <td>
+         </td>
+         <td>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+     <div class="step_right">
+      <button>
+       ↑
+      </button>
+      <button>
+       ↓
+      </button>
+     </div>
+     <div class="step_right">
+      <button>
+       ×
+      </button>
+      <button>
+       ≡
+      </button>
+      <button>
+       +
+      </button>
+     </div>
     </div>
-    <div class="step_right">
-     <button>
-      ↑
-     </button>
-     <button>
-      ↓
-     </button>
-    </div>
-    <div class="step_right">
-     <button>
-      ×
-     </button>
-     <button>
-      ≡
-     </button>
-     <button>
-      +
-     </button>
-    </div>
+    <ul class="step_container">
+    </ul>
    </li>
   </template>
   <template id="step_template">
    <li class="step">
-    <div class="step_left">
-     <span class="step_num">
-      Step number
-     </span>
-     <span class="step_duration">
-      Duration
-     </span>
-     <span class="step_frequency">
-      Frequency
-     </span>
-     <span class="step_temp">
-      Temperature
-     </span>
-     <ul class="step_container">
-     </ul>
+    <div>
+     <div class="step_left">
+      <span class="step_num">
+      </span>
+      <table>
+       <tbody>
+        <tr>
+         <td>
+          Duration:
+         </td>
+         <td class="step_duration">
+         </td>
+         <td>
+          Type:
+         </td>
+         <td class="step_type">
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Repeat:
+         </td>
+         <td class="step_repeat_enabled">
+         </td>
+         <td>
+          Frequency:
+         </td>
+         <td class="step_frequency">
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Temperature:
+         </td>
+         <td class="step_temp">
+         </td>
+         <td>
+         </td>
+         <td>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
     </div>
-    <div class="step_right">
-     <button>
-      ≡
-     </button>
-    </div>
+    <ul class="step_container">
+    </ul>
    </li>
   </template>
   <div id="outer_container">
@@ -83,7 +140,7 @@
     <summary class="panel_header">
      Profile Settings
     </summary>
-    <table class="collapsible" id="profile_settings_content">
+    <table id="profile_settings_content">
      <tr>
       <td>
        Profile Name
@@ -227,64 +284,6 @@
     </div>
    </details>
    <ul class="step_container" id="main_step_list">
-    <li class="step" id="step-0">
-     <div class="step_left">
-      <span>
-       Step 0 - Prewash
-      </span>
-      <span>
-       Duration: 100s
-      </span>
-      <ul class="step_container">
-       <li class="step">
-        <div class="step_left">
-         <span>
-          Agitation
-         </span>
-         <span>
-          Duration: 10s
-         </span>
-         <span>
-          Frequency: Continuous
-         </span>
-        </div>
-        <div class="step_right">
-         <button>
-          ↑
-         </button>
-         <button>
-          ↓
-         </button>
-        </div>
-        <div class="step_right">
-         <button>
-          ×
-         </button>
-         <button>
-          ≡
-         </button>
-        </div>
-       </li>
-      </ul>
-     </div>
-     <div class="step_right">
-      <button>
-       ×
-      </button>
-      <button>
-       ≡
-      </button>
-      <button>
-       +
-      </button>
-      <button>
-       ↑
-      </button>
-      <button>
-       ↓
-      </button>
-     </div>
-    </li>
    </ul>
   </div>
  </body>
