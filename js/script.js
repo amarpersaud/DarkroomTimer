@@ -10,10 +10,10 @@
 	});
 	Object.freeze(StepDurationType);
 	
-	var depth_limit = 3;
-	
 	///Step in development process
 	class DevelopmentStep{
+		depth_limit = 3;
+		
 		step_id = 0;
 		step_type = "Chemical";
 		step_name = "DefaultStepName"; 
@@ -34,17 +34,23 @@
 		
 		depth = 0;
 		
-		constructor(id, type, name, duration, repeat_enabled, repeat_until_end, freq, temperature, sub_steps, depth){
+		constructor(id, type, name, duration, repeat_enabled, repeat_until_end, repeat_count, frequency, temperature, sub_steps, depth, parent_id){
 			this.step_id = id;
 			this.step_type = type;
 			this.step_name = name;
 			this.step_duration = duration;
+
 			this.step_repeat_enabled = repeat_enabled;
 			this.step_repeat_until_end = repeat_until_end;
-			this.step_frequency = freq;
+			this.step_repeat_count = repeat_count;
+
+			this.step_frequency = frequency;
+
 			this.step_temperature = temperature;
+
 			this.sub_steps = sub_steps;
 			this.depth = depth;
+			this.step_parent = parent_id;
 		}
 
 		find_element_by_id(step_id){
@@ -104,7 +110,7 @@
 		}
 	}
 	
-	var m_RootStep = new DevelopmentStep(-1, "", "", 0, false, false, 0, 20, [], 0);
+	var m_RootStep = new DevelopmentStep(-1, "", "", 0, false, false, 0, 0, 20, [], 0, -1);
 	
 	var CurrentProfile = new DevelopmentProfile(m_RootStep, "Unnamed Profile 2", 0, 0);
 	
@@ -151,7 +157,7 @@
 
 		let new_step_type = document.getElementById("step_type_edit").value;
 		let new_step_frequency = document.getElementById("step_frequency_edit").value;
-		let new_step_frequency_duration = document.getElementById("step_frequency_duration_edit").value;
+		let new_step_repeat_count = document.getElementById("step_repeat_count_edit").value;
 
 		let new_repeat_enabled = document.getElementById("step_repeat_edit").checked;
 		let new_repeat_until_end = document.getElementById("step_repeat_until_end_edit").checked;
@@ -159,13 +165,13 @@
 		
 		itm.step_name = new_step_name;
 		itm.step_duration = new_step_duration;
-		
 		itm.step_type = new_step_type;
-		itm.step_frequency = new_step_frequency;
-		itm.step_frequency_duration = new_step_frequency_duration;
 		
-		itm.repeat_enabled = new_repeat_enabled;
-		itm.repeat_until_end = new_repeat_until_end;
+		itm.step_frequency = new_step_frequency;
+		itm.step_repeat_enabled = new_repeat_enabled;
+		itm.step_repeat_until_end = new_repeat_until_end;
+		itm.step_repeat_count = new_step_repeat_count;
+		
 		itm.step_temperature = new_step_temp;
 		
 		refreshUI();
@@ -264,13 +270,12 @@
 
 			let new_step_type = document.getElementById("step_type_edit").value;
 			let new_step_frequency = document.getElementById("step_frequency_edit").value;
-			let new_step_frequency_duration = document.getElementById("step_frequency_duration_edit").value;
+			let new_step_repeat_count = document.getElementById("step_repeat_count_edit").value;
 
 			let new_step_repeat_enabled = document.getElementById("step_repeat_edit").checked;
 			let new_step_repeat_until_end = document.getElementById("step_repeat_until_end_edit").checked;
 			let new_step_temp= document.getElementById("step_temperature_edit").value;
 
-		/* todo: populate from boxes for continuous and freq type */
 			/* todo: populate from boxes for continuous and freq type */
 			let new_step = new DevelopmentStep(
 				CurrentProfile.current_step_id,
@@ -279,13 +284,14 @@
 				new_step_duration,
 				new_step_repeat_enabled,
 				new_step_repeat_until_end,
+				new_step_repeat_count,
 				new_step_frequency,
 				new_step_temp,
 				[],
-				itm.depth + 1
+				itm.depth + 1,
+				itm.step_id
 			);
-			new_step.step_parent = itm.step_id;
-			CurrentProfile.current_editing_step_id = CurrentProfile.current_step_id;
+			CurrentProfile.current_editing_step_id = CurrentProfile.current_step_id;	//Begin editing the newly inserted step
 			itm.sub_steps.push(new_step);
 			CurrentProfile.RecalculateStepID();
 		}
@@ -333,7 +339,7 @@
 	
 
 	/* Adds step to the list */
-	function add_step(step_name, step_type, step_duration, step_repeat_enabled, step_repeat_until_end, step_frequency, step_temperature, step_sub_steps){
+	function add_step(step_name, step_type, step_duration, step_repeat_enabled, step_repeat_until_end, step_repeat_count, step_frequency, step_temperature, step_sub_steps){
 		let new_step = new DevelopmentStep(
 			CurrentProfile.current_step_id,
 			step_type,
@@ -341,13 +347,14 @@
 			step_duration,
 			step_repeat_enabled,
 			step_repeat_until_end,
+			step_repeat_count,
 			step_frequency,
 			step_temperature,
 			step_sub_steps,
-			1
+			1,
+			CurrentProfile.RootStep.step_id
 		);
 		
-		new_step.step_parent = CurrentProfile.RootStep.step_id;
 		CurrentProfile.RootStep.sub_steps.push(new_step);
 		CurrentProfile.RecalculateStepID();
 		refreshUI();
@@ -506,9 +513,7 @@
 	
 	function JsonLoadedStepToDevelopmentStep(JsonObj){
 		if(JsonObj != null){
-			let newStep = new DevelopmentStep(JsonObj.step_id, JsonObj.step_type, JsonObj.step_name, JsonObj.step_duration, JsonObj.step_repeat_enabled, JsonObj.step_repeat_until_end, JsonObj.step_frequency, JsonObj.step_temperature, [], JsonObj.depth);
-			newStep.step_parent = JsonObj.step_parent;
-
+			let newStep = new DevelopmentStep(JsonObj.step_id, JsonObj.step_type, JsonObj.step_name, JsonObj.step_duration, JsonObj.step_repeat_enabled, JsonObj.step_repeat_until_end, JsonObj.step_repeat_count, JsonObj.step_frequency, JsonObj.step_temperature, [], JsonObj.depth, JsonObj.step_parent);
 
 			for(let i = 0; i < JsonObj.sub_steps.length; i++){
 				newStep.sub_steps.push(JsonLoadedStepToDevelopmentStep(JsonObj.sub_steps[i]));
