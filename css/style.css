@@ -1,5 +1,6 @@
 :root {
 	--main-bg-color: brown;
+	--panel-color-top: #2a2e2f;
 }
 *{
   font-family: Calibri, Helvetica, Sans-Serif;
@@ -40,7 +41,7 @@ body,html,head{
 }
 
 .step_panel{ 
-	background-color: #2a2e2f;
+	background-color: var(--panel-color-top);
 	margin: 5px;
 	padding: 15px;
 	border-radius: 5px;
@@ -58,7 +59,7 @@ body,html,head{
 
 button, .tb, select{
 	min-height: 38px;
-	background-color: #2a2e2f;
+	background-color: var(--panel-color-top);
 	border-radius: 5px;
 	margin: 3px 0;  
 	box-sizing: border-box;
@@ -80,7 +81,7 @@ button, .tb, select{
 
 .step{
 	width: auto;
-	background-color: rgb(62, 62, 62);
+	background-color: var(--panel-color-top);
 	padding: 10px;
 	border-radius: 5px;
 	display:flex;
@@ -189,13 +190,14 @@ table, thead, tr, td{
 	}
 	#outer_container{
 		width: 100%;	
-		padding: 4px;
+		padding: 0;
 	}
 	.step_panel{
 		padding: 4px;
+		margin: 4px 4px 0 4px;
 	}
 	*{
-		font-size: 4vw;
+		font-size: 14px;
 	}
 	button, .tb, select {
 		min-height: 28px;
@@ -209,12 +211,14 @@ table, thead, tr, td{
 	.step_panel input {
 		max-width: 70%;
 	}
-	.step_container td{
-		padding: 0 4px;
+	details td{
+		padding: 4px;
 	}
 	.step_right{
 		margin-left: 2px;
 		min-width: 30px;
 	}
-
+	#main_step_list > .step:first-child{
+		margin-top: 0;
+	}
 }

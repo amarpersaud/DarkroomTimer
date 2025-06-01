@@ -1,0 +1,137 @@
+{
+  "RootStep": {
+    "step_id": -1,
+    "step_type": "",
+    "step_name": "",
+    "step_duration": 0,
+    "step_repeat_enabled": false,
+    "step_repeat_until_end": false,
+    "step_repeat_count": 0,
+    "step_frequency": 0,
+    "step_temperature": 20,
+    "sub_steps": [
+      {
+        "step_id": 2,
+        "step_type": "Chemical",
+        "step_name": "Prewash",
+        "step_duration": "60",
+        "step_repeat_enabled": false,
+        "step_repeat_until_end": false,
+        "step_repeat_count": 0,
+        "step_frequency": "",
+        "step_temperature": "38",
+        "sub_steps": [],
+        "step_parent": -1,
+        "depth": 1
+      },
+      {
+        "step_id": 0,
+        "step_type": "Chemical",
+        "step_name": "Development",
+        "step_duration": "210",
+        "step_repeat_enabled": false,
+        "step_repeat_until_end": false,
+        "step_repeat_count": 0,
+        "step_frequency": "",
+        "step_temperature": "38",
+        "sub_steps": [
+          {
+            "step_id": 1,
+            "step_type": "Physical",
+            "step_name": "Agitation",
+            "step_duration": "10",
+            "step_repeat_enabled": false,
+            "step_repeat_until_end": false,
+            "step_repeat_count": 0,
+            "step_frequency": "",
+            "step_temperature": "38",
+            "sub_steps": [],
+            "step_parent": 0,
+            "depth": 2
+          },
+          {
+            "step_id": 3,
+            "step_type": "Physical",
+            "step_name": "Agitation",
+            "step_duration": "5",
+            "step_repeat_enabled": true,
+            "step_repeat_until_end": true,
+            "step_repeat_count": 0,
+            "step_frequency": "30",
+            "step_temperature": "38",
+            "sub_steps": [],
+            "step_parent": 0,
+            "depth": 2
+          }
+        ],
+        "step_parent": -1,
+        "depth": 1
+      },
+      {
+        "step_id": 4,
+        "step_type": "Chemical",
+        "step_name": "Blix",
+        "step_duration": "480",
+        "step_repeat_enabled": false,
+        "step_repeat_until_end": false,
+        "step_repeat_count": 0,
+        "step_frequency": "",
+        "step_temperature": "38",
+        "sub_steps": [
+          {
+            "step_id": 6,
+            "step_type": "Physical",
+            "step_name": "Agitation",
+            "step_duration": "10",
+            "step_repeat_enabled": false,
+            "step_repeat_until_end": false,
+            "step_repeat_count": 0,
+            "step_frequency": "",
+            "step_temperature": "38",
+            "sub_steps": [],
+            "step_parent": 4,
+            "depth": 2
+          },
+          {
+            "step_id": 7,
+            "step_type": "Physical",
+            "step_name": "Agitation",
+            "step_duration": "5",
+            "step_repeat_enabled": true,
+            "step_repeat_until_end": true,
+            "step_repeat_count": 0,
+            "step_frequency": "30",
+            "step_temperature": "38",
+            "sub_steps": [],
+            "step_parent": 4,
+            "depth": 2
+          }
+        ],
+        "step_parent": -1,
+        "depth": 1
+      },
+      {
+        "step_id": 5,
+        "step_type": "Chemical",
+        "step_name": "Wash",
+        "step_duration": "600",
+        "step_repeat_enabled": true,
+        "step_repeat_until_end": false,
+        "step_repeat_count": 0,
+        "step_frequency": "30",
+        "step_temperature": "38",
+        "sub_steps": [],
+        "step_parent": -1,
+        "depth": 1
+      }
+    ],
+    "step_parent": -1,
+    "depth": 0
+  },
+  "ProfileName": "CS-41 Process",
+  "PourInTime": "10",
+  "PourOutTime": "10",
+  "current_step_id": 6,
+  "editing_enabled": true,
+  "current_editing_step_id": 2
+}
