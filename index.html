@@ -283,6 +283,32 @@
      </button>
     </div>
    </details>
+   <details class="step_panel" open="">
+    <summary class="panel_header">
+     Run Profile
+    </summary>
+    <span>
+     <button onclick="RunProfile();">
+      Run
+     </button>
+     <button onclick="PauseProfile();">
+      Pause
+     </button>
+     <button onclick="EndProfile();">
+      End
+     </button>
+    </span>
+    <span class="progress_bar" id="run_progress_bar">
+     <progress max="10000" value="40">
+     </progress>
+     <div>
+      0%
+     </div>
+    </span>
+    <span>
+     Current Step:
+    </span>
+   </details>
    <ul class="step_container" id="main_step_list">
    </ul>
   </div>

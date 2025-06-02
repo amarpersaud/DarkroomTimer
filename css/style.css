@@ -136,6 +136,12 @@ button, .tb, select{
 	margin: 3px 0;
 	padding: 0;
 }
+details button{
+	margin-right: 5px;	
+}
+summary{
+	margin-bottom: 5px;
+}
 .edited_step{
 	/*background-color: rgb(70, 100, 70) !important;*/
 	border: 3px dashed rgb(50, 170, 50) !important; 
@@ -184,6 +190,15 @@ table, thead, tr, td{
 .step table{
 	display: initial;
 }
+
+.progress_bar{
+	display:flex !important;
+	flex-direction: row;
+}
+.progress_bar > div{
+	margin-left: 4px;
+}
+
 @media (max-width:1150px) {
 	details tr:not(:last-child){
 		border-bottom:1px solid #555;

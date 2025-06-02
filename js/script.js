@@ -533,3 +533,24 @@
 		}
 		return null;
 	}
+
+	function UpdateRunProgress(percentage){
+		let prog_bar_parent = document.getElementById("run_progress_bar");
+		let prog_bar = prog_bar_parent.querySelector("progress");
+		let prog_text = prog_bar_parent.querySelector("div");
+		console.log(percentage);
+		console.log(prog_bar.min);
+		console.log(prog_bar.max);
+		let newval = Math.round(percentage * prog_bar.max);
+		console.log(newval);
+		prog_bar.value = newval;
+		prog_text.innerHTML = (percentage*100).toFixed(2);
+	}
+
+	function RunProfile(){
+		for(let i = 0; i < 5001; i++){
+			setTimeout(() => {
+				UpdateRunProgress(i/5000.0);
+			}, i*2)
+		}
+	}
