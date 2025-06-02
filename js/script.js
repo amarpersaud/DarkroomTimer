@@ -185,14 +185,14 @@
 
 		let new_step_type = document.getElementById("step_type_edit").value;
 		let new_step_frequency = document.getElementById("step_frequency_edit").value;
-		let new_step_frequency_duration = document.getElementById("step_frequency_duration_edit").value;
+		let new_step_repeat_count = document.getElementById("step_repeat_count_edit").value;
 
 		let new_repeat_enabled = document.getElementById("step_repeat_edit").checked;
 		let new_repeat_until_end = document.getElementById("step_repeat_until_end_edit").checked;
 		let new_step_temp= document.getElementById("step_temperature_edit").value;
 
 		CurrentProfile.current_editing_step_id = CurrentProfile.current_step_id;
-		add_step(new_step_name, new_step_type, new_step_duration, new_repeat_enabled, new_repeat_until_end, new_step_frequency, new_step_temp, []);
+		add_step(new_step_name, new_step_type, new_step_duration, new_repeat_enabled, new_repeat_until_end, new_step_repeat_count, new_step_frequency, new_step_temp, []);
 		CurrentProfile.RecalculateStepID();
 	}
 
